@@ -1,0 +1,35 @@
+import re
+
+filepath = 'inputfile.txt'
+score = 0
+
+balls = {"red": 12, "green": 13, "blue": 14}
+
+with open(filepath, 'r') as file:
+    for line in file:
+        game = re.split(':', line.strip())
+
+        ID = int(game[0].split(r' ')[1])
+        sets = game[1].split(';')
+
+        actual_passed = 0
+        possible_passed = 0
+
+        for set in sets:
+            subsets = set.strip().split(',')
+
+            for subset in subsets:
+                subsubsets = subset.strip().split(' ')
+
+                amount = int(subsubsets[0])
+                color = subsubsets[1]
+
+                possible_passed += 1
+
+                if balls.get(color) >= amount:
+                    actual_passed += 1
+        
+        if actual_passed == possible_passed:
+            score += ID
+        
+print(score)

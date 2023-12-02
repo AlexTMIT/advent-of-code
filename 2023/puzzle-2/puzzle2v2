@@ -1,0 +1,31 @@
+import re
+
+filepath = 'inputfile.txt'
+score = 0
+
+balls = {"red": 12, "green": 13, "blue": 14}
+
+with open(filepath, 'r') as file:
+    for line in file:
+        game = re.split(':', line.strip())
+
+        ID = int(game[0].split(r' ')[1])
+        sets = game[1].split(';')
+
+        lowest = {"red": 1, "green": 1, "blue": 1}
+
+        for set in sets:
+            subsets = set.strip().split(',')
+
+            for subset in subsets:
+                subsubsets = subset.strip().split(' ')
+
+                amount = int(subsubsets[0])
+                color = subsubsets[1]
+
+                if amount > lowest.get(color):
+                    lowest[str(color)] = amount
+        
+        score += lowest.get("red") * lowest.get("green") * lowest.get("blue")
+        
+print(score)
