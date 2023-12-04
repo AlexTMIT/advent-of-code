@@ -1,0 +1,56 @@
+def main():
+    total = 0
+    schematic = []
+    checked = {'#', '*', '=', '/', '&', '+', '!', '@', '%', '^', '(', ')', '_', '-', '$'}
+    counted_cells = set()
+
+    with open('input-file.txt', 'r') as file:
+        for line in file:
+            characters = list(line.strip())
+            schematic.append(characters)
+
+    for line_index, line in enumerate(schematic):
+        for column_index, character in enumerate(line):
+            if character in checked:
+                total += checkSurrounding(line_index, column_index, schematic, counted_cells)
+
+    print(total)
+
+def checkSurrounding(line_index, column_index, schematic, counted_cells):
+    total = 0
+
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            if (line_index + i, column_index + j) not in counted_cells:
+                number, cells = extractFullNumber(line_index + i, column_index + j, schematic)
+                if number:
+                    total += number
+                    counted_cells.update(cells)
+
+    return total
+
+def extractFullNumber(line_index, column_index, schematic):
+    if 0 <= line_index < len(schematic) and 0 <= column_index < len(schematic[line_index]):
+        if schematic[line_index][column_index].isdigit():
+            number_str = ''
+            cells = []
+            offset = 0
+
+            # Check left
+            while column_index - offset >= 0 and schematic[line_index][column_index - offset].isdigit():
+                number_str = schematic[line_index][column_index - offset] + number_str
+                cells.append((line_index, column_index - offset))
+                offset += 1
+
+            # Check right (excluding the starting digit)
+            offset = 1
+            while column_index + offset < len(schematic[line_index]) and schematic[line_index][column_index + offset].isdigit():
+                number_str += schematic[line_index][column_index + offset]
+                cells.append((line_index, column_index + offset))
+                offset += 1
+
+            return int(number_str), cells
+
+    return 0, []
+
+main()
