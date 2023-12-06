@@ -1,0 +1,28 @@
+import re
+
+total = 1
+
+with open('input.txt', 'r') as file:
+    timeslist = file.readline().strip().split()
+    distanceslist = file.readline().strip().split()
+
+distances = ''
+times = ''
+
+for i in range(1, len(timeslist)):
+    times += timeslist[i]
+    distances += distanceslist[i]
+
+add = 0
+time = int(times)
+record_distance = int(distances)
+
+for j in range (0, time):
+    distance = (time - j) * j
+
+    if distance > record_distance:
+        add += 1
+
+total *= add
+
+print(total)
